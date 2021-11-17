@@ -138,7 +138,7 @@ const install = async () => {
   const rawfiles = ['preupgrade', 'postupgrade', 'preinstall', 'postinstall', 'preroot', 'postroot']
     .filter((name) => pluginConfig.features[name])
     .map((name) => `${name}.sh`);
-  const files = ['README', 'LICENCE', ...rawfiles];
+  const files = ['README.md', 'LICENCE', ...rawfiles];
   folders.forEach((folder) =>
     copyRecursive(path.resolve(__dirname, './meta', folder), path.resolve(installationFolder, folder))
   );
@@ -151,9 +151,9 @@ const install = async () => {
 
   // replace content in templates
   const contentReplace = {
-    php: ['webfrontend/htmlauth/index.php', 'README'],
-    perl: ['webfrontend/htmlauth/index.cgi', 'README'],
-    node: ['webfrontend/htmlauth/express.js', 'webfrontend/htmlauth/package.json', 'package.json', 'README']
+    php: ['webfrontend/htmlauth/index.php', 'README.md'],
+    perl: ['webfrontend/htmlauth/index.cgi', 'README.md'],
+    node: ['webfrontend/htmlauth/express.js', 'webfrontend/htmlauth/package.json', 'package.json', 'README.md']
   };
 
   for (const file of contentReplace[pluginConfig.plugin.language]) {
