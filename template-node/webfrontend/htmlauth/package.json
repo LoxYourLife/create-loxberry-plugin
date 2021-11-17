@@ -1,0 +1,7 @@
+{
+  "name": "loxberry-{{plugin.name.git}}",
+  "version": "{{plugin.version}}",
+  "author": "{{author.name}}",
+  "license": "APACHE 2.0",
+  "dependencies": {}
+}

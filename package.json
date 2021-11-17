@@ -1,0 +1,26 @@
+{
+  "name": "create-loxberry-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "bin": {
+    "create-loxberry-plugin": "index.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ./",
+    "prettify": "prettier --write ."
+  },
+  "config": {
+    "eslint": "--ignore-path .gitignore --cache --format=codeframe --max-warnings=0 \"**/*.{js,md,html}\" \"*.{js,md,html}\" \".*.{js,md,html}\"",
+    "prettier": "--ignore-path .gitignore --loglevel=warn \"**/*.{js,md,yml,json,html}\" \"*.{js,yml,json,html}\" \".*.{js,yml,json,html}\" \"!package-lock.json\""
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "eslint": "7.26.0",
+    "handlebars": "^4.7.6",
+    "lodash": "4.17.21",
+    "prettier": "2.3.0",
+    "prompts": "2.4.2"
+  }
+}
