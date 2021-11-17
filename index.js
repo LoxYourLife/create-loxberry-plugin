@@ -94,7 +94,7 @@ const preRoot = (pluginConfig) => {
 
   if (pluginConfig.plugin.language === 'node') {
     customContent += 'echo "<INFO> Checking for express Plugin"\n';
-    if (pluginConfig.features.express && pluginConfig.features.express === true) {
+    if (pluginConfig.features.express === false) {
       customContent += 'REQUIRED_VERSION="0.0.1"\n';
     } else {
       customContent += `REQUIRED_VERSION="${pluginConfig.features.express}"\n`;
@@ -153,7 +153,13 @@ const install = async () => {
   const contentReplace = {
     php: ['webfrontend/htmlauth/index.php', 'README.md'],
     perl: ['webfrontend/htmlauth/index.cgi', 'README.md'],
-    node: ['webfrontend/htmlauth/express.js', 'webfrontend/htmlauth/package.json', 'package.json', 'README.md']
+    node: [
+      'webfrontend/htmlauth/express.js',
+      'webfrontend/htmlauth/package.json',
+      'webfrontend/htmlauth/.htaccess',
+      'package.json',
+      'README.md'
+    ]
   };
 
   for (const file of contentReplace[pluginConfig.plugin.language]) {
