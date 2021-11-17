@@ -105,12 +105,12 @@ const preRoot = (pluginConfig) => {
     customContent += 'then\n';
     customContent +=
       '  echo "<ERROR> the plugin youre trying to install requires the Express plugin. Please install this first."\n';
-    customContent += '  exit 1;\n';
+    customContent += '  exit 2;\n';
     customContent += 'elif [ $EXPRESS = "2" ]\n';
     customContent += 'then\n';
     customContent +=
       '  echo "<ERROR> the plugin youre trying to install requires the Express plugin with a version >= $REQUIRED_VERSION Please upgrade the Express plugin."\n';
-    customContent += '  exit 1;\n';
+    customContent += '  exit 2;\n';
     customContent += 'fi\n\n';
   }
 
