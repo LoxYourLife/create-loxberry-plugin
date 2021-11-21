@@ -37,7 +37,7 @@ PVERSION=$4   # Forth argument is Plugin version
 PTEMPPATH=$6  # Sixth argument is full temp path during install (see also $1)
 
 # Combine them with /etc/environment
-PHTMLAUTH=$LBPHTMLAUTH/$PDIR
+PHTMLAUTH=$LBHOMEDIR/webfrontend/htmlauth/plugins/$PDIR
 PHTML=$LBPHTML/$PDIR
 PTEMPL=$LBPTEMPL/$PDIR
 PDATA=$LBPDATA/$PDIR

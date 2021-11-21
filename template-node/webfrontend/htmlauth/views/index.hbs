@@ -1,3 +1,19 @@
-<h1>Hallo Welt</h1>
-
-<img src='/icon_256.png' />
+<style>
+  .hello {
+    display: flex;
+    column-gap: 2rem;
+	  align-items: stretch;
+  }
+  .hello > * {
+    flex-direction: row;
+    margin: 0;
+  }
+  h1 {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 3rem;
+  }
+</style>
+<div class="hello">
+  <img src='assets/icon_64.png' />
+  <h1>Hallo Welt</h1>
+</div>
