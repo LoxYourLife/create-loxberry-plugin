@@ -4,7 +4,7 @@
 
 > This is currently under development. No guarantee that everything works!
 
-This is a plugin generator for Loxberry Plgugins. It will ask ou lot's of questions and based on the answers generate a loxberry plugin template.
+This is a plugin generator for Loxberry Plugins. It will ask ou lot's of questions and based on the answers generate a loxberry plugin template.
 It's avaialable for `Perl`, `PHP` and `NodeJS - Express`. After generating the template you can directly install it on Loxberry.
 
 ## How to genrate a template
