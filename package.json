@@ -1,7 +1,7 @@
 {
   "name": "create-loxberry-plugin",
   "version": "1.0.0",
-  "description": "",
+  "description": "Loxberry Plugin Generator",
   "repository": "github:LoxYourLife/create-loxberry-plugin.git",
   "bin": {
     "create-loxberry-plugin": "index.js"
