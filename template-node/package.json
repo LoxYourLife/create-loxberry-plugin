@@ -3,7 +3,7 @@
   "version": "{{plugin.version}}",
   "description": "",
   "scripts": {
-    "dev": "nodemon --watch webfrontend/htmlauth --watch templates .dev/index"
+    "dev": "nodemon --watch webfrontend/htmlauth/express --watch templates .dev/index"
   },
   "author": "{{author.name}}",
   "license": "APACHE 2.0",

@@ -13,7 +13,6 @@ const _ = require('lodash');
 
 const getLanguage = async (defaultLanguage, templatePath, logger) => {
   let languages = {};
-  console.log(templatePath);
   try {
     const files = await fs.readdir(templatePath);
     languages = _.reduce(
@@ -35,7 +34,7 @@ const getLanguage = async (defaultLanguage, templatePath, logger) => {
   return i18next.init({
     lng: defaultLanguage,
     fallbackLng: Object.keys(languages),
-    debug: true,
+    debug: false,
     resources: languages
   });
 };
@@ -44,10 +43,7 @@ const createServer = async () => {
 
   app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.header(
-      'Access-Control-Allow-Headers',
-      'Origin, X-Requested-With, Content-Type, Cache-control, Accept, Authorization'
-    );
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Cache-control, Accept, Authorization');
     next();
   });
 
@@ -70,15 +66,16 @@ const createServer = async () => {
     }
     return translate(context);
   };
-  const module = require(path.resolve(__dirname, '../webfrontend/htmlauth/express.js'));
+  const module = require(path.resolve(__dirname, '../webfrontend/htmlauth/express/express.js'));
   const plugin = module({
     router: addWsToRouter(express.Router()),
-    static: express.static,
+    expressStatic: express.static,
     logger,
     _,
     translate
   });
-  app.use('/', async (req, res, next) => {
+
+  const pluginRenderer = async (req, res, next) => {
     const originalRender = res.render;
 
     res.render = (view, options, fn) => {
@@ -90,7 +87,8 @@ const createServer = async () => {
       originalRender.call(res, view, options, fn);
     };
     await plugin(req, res, next);
-  });
+  };
+  app.use('/', pluginRenderer);
   app.use('/', express.static(path.resolve(__dirname, '../webfrontend/htmlauth/')));
 
   app.get('*', (req, res, next) => {

@@ -71,6 +71,8 @@ const postUpgrade = (pluginConfig) => {
   if (pluginConfig.plugin.language === 'node') {
     customContent += 'echo "<INFO> installing dependencies"\n';
     customContent += 'npm --prefix $PHTMLAUTH ci --only=production\n\n';
+    customContent += 'echo "<INFO> Register Plugin at Express Server"\n';
+    customContent += `curl -X POST http://localhost:3000/system/express/plugin/${pluginConfig.plugin.name.name}\n\n`;
   }
   return customContent;
 };
@@ -82,9 +84,9 @@ const postInstall = (pluginConfig) => {
 
   if (pluginConfig.plugin.language === 'node') {
     customContent += 'echo "<INFO> installing dependencies"\n';
-    customContent += 'npm --prefix $PHTMLAUTH ci --only=production\n\n';
+    customContent += 'npm --prefix $PHTMLAUTH/express ci --only=production\n\n';
     customContent += 'echo "<INFO> copy .htaccess"\n';
-    customContent += 'cp webfrontend/htmlauth/.htaccess $PHTMLAUTH/.htaccess\n\n';
+    customContent += 'cp webfrontend/htmlauth/express/.htaccess $PHTMLAUTH/express/.htaccess\n\n';
   }
   return customContent;
 };
@@ -95,7 +97,7 @@ const preRoot = (pluginConfig) => {
   if (pluginConfig.plugin.language === 'node') {
     customContent += 'echo "<INFO> Checking for express Plugin"\n';
     if (pluginConfig.features.express === false) {
-      customContent += 'REQUIRED_VERSION="0.0.1"\n';
+      customContent += 'REQUIRED_VERSION="0.0.2"\n';
     } else {
       customContent += `REQUIRED_VERSION="${pluginConfig.features.express}"\n`;
     }
@@ -154,9 +156,9 @@ const install = async () => {
     php: ['webfrontend/htmlauth/index.php', 'README.md'],
     perl: ['webfrontend/htmlauth/index.cgi', 'README.md'],
     node: [
-      'webfrontend/htmlauth/express.js',
-      'webfrontend/htmlauth/package.json',
-      'webfrontend/htmlauth/.htaccess',
+      'webfrontend/htmlauth/express/express.js',
+      'webfrontend/htmlauth/express/package.json',
+      'webfrontend/htmlauth/express/.htaccess',
       'package.json',
       'README.md'
     ]
