@@ -28,7 +28,7 @@ const githubRepo = (name) => ({
   message: 'Whats your Github namespace? Typically your name or organizations name?'
 });
 
-const pluginQuestions = async () => {
+const pluginQuestions = async (defaultExpressVersion) => {
   console.log('Please answer the following questions as good as you can.');
   console.log('');
 
@@ -102,7 +102,7 @@ const pluginQuestions = async () => {
       name: 'required',
       message: 'Do you need a specific version of the express plugin?',
       format: async (value) => {
-        if (value === false) return value;
+        if (value === false) return defaultExpressVersion;
 
         const version = await prompts({
           type: 'text',

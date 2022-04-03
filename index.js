@@ -6,6 +6,8 @@ const util = require('util');
 const rmdir = util.promisify(fs.rmdir);
 const { copyRecursive, copyContentRecursive, renderFile, exec } = require('./helpers');
 
+const DEFAULT_EXPRESS_VERSION = '0.0.3';
+
 const pathChecks = async () => {
   const nodeVersion = await exec('node', ['--version']);
   if (nodeVersion < 'v12.10.0') {
@@ -34,7 +36,7 @@ const pathChecks = async () => {
   return installationFolder;
 };
 const getPluginInfo = async () => {
-  return questionaire.pluginQuestions();
+  return questionaire.pluginQuestions(DEFAULT_EXPRESS_VERSION);
 };
 
 const preUpgrade = (pluginConfig) => {
@@ -72,7 +74,7 @@ const postUpgrade = (pluginConfig) => {
     customContent += 'echo "<INFO> installing dependencies"\n';
     customContent += 'npm --prefix $PHTMLAUTH ci --only=production\n\n';
     customContent += 'echo "<INFO> Register Plugin at Express Server"\n';
-    customContent += `curl -X POST http://localhost:3000/system/express/plugin/${pluginConfig.plugin.name.name}\n\n`;
+    customContent += `curl -X POST http://localhost:3300/system/express/plugin/${pluginConfig.plugin.name.name}\n\n`;
   }
   return customContent;
 };
@@ -91,33 +93,7 @@ const postInstall = (pluginConfig) => {
   return customContent;
 };
 
-const preRoot = (pluginConfig) => {
-  let customContent = '';
-
-  if (pluginConfig.plugin.language === 'node') {
-    customContent += 'echo "<INFO> Checking for express Plugin"\n';
-    if (pluginConfig.features.express === false) {
-      customContent += 'REQUIRED_VERSION="0.0.2"\n';
-    } else {
-      customContent += `REQUIRED_VERSION="${pluginConfig.features.express}"\n`;
-    }
-
-    customContent += `EXPRESS=$(perl -e "use LoxBerry::System;print !LoxBerry::System::plugindata("express") ? 1 : LoxBerry::System::pluginversion('express') ge '$REQUIRED_VERSION' ? 0 : 2;exit;")\n`;
-    customContent += 'if [ $EXPRESS = "1" ]\n';
-    customContent += 'then\n';
-    customContent +=
-      '  echo "<ERROR> the plugin youre trying to install requires the Express plugin. Please install this first."\n';
-    customContent += '  exit 2;\n';
-    customContent += 'elif [ $EXPRESS = "2" ]\n';
-    customContent += 'then\n';
-    customContent +=
-      '  echo "<ERROR> the plugin youre trying to install requires the Express plugin with a version >= $REQUIRED_VERSION Please upgrade the Express plugin."\n';
-    customContent += '  exit 2;\n';
-    customContent += 'fi\n\n';
-  }
-
-  return customContent;
-};
+const preRoot = () => '';
 
 const postRoot = () => '';
 
@@ -159,6 +135,7 @@ const install = async () => {
       'webfrontend/htmlauth/express/express.js',
       'webfrontend/htmlauth/express/package.json',
       'webfrontend/htmlauth/express/.htaccess',
+      'webfrontend/htmlauth/index.cgi',
       'package.json',
       'README.md'
     ]
