@@ -15,7 +15,7 @@
     "eslint": "--ignore-path .gitignore --cache --format=codeframe --max-warnings=0 \"**/*.{js,md,html}\" \"*.{js,md,html}\" \".*.{js,md,html}\"",
     "prettier": "--ignore-path .gitignore --loglevel=warn \"**/*.{js,md,yml,json,html}\" \"*.{js,yml,json,html}\" \".*.{js,yml,json,html}\" \"!package-lock.json\""
   },
-  "author": "",
+  "author": "Lox Your Life",
   "license": "ISC",
   "dependencies": {
     "eslint": "7.26.0",
