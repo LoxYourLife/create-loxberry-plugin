@@ -13,22 +13,22 @@ const githubRepo = (name) => ({
     const repoConfirm = await prompts({
       type: 'confirm',
       name: 'confirmed',
-      message: `Does this look okay? https://github.com/${value.toLowerCase()}/${name}`
+      message: `Does this look okay? https://github.com/${value}/${name}`
     });
 
     if (repoConfirm.confirmed) {
       return {
-        organisation: value.toLowerCase(),
+        organisation: value,
         repo: name,
-        url: `git@github.com:${value.toLowerCase()}/${name}.git`
+        url: `git@github.com:${value}/${name}.git`
       };
     }
-    return (await prompts(githubRepo(name))).git;
+    return (await prompts(githubRepo(name)));
   },
   message: 'Whats your Github namespace? Typically your name or organizations name?'
 });
 
-const pluginQuestions = async (defaultExpressVersion) => {
+const pluginQuestions = async (defaultExpressVersion, suggestedName) => {
   console.log('Please answer the following questions as good as you can.');
   console.log('');
 
@@ -55,6 +55,7 @@ const pluginQuestions = async (defaultExpressVersion) => {
       type: 'text',
       name: 'name',
       message: 'Which name should your Plugin have?',
+      initial: suggestedName,
       validate: (value) => {
         if (/^([a-z0-9_\- ]+)$/i.test(value) === false)
           return `Please enter a valid name (Only lettrs, numbers and "-", "_")`;
@@ -149,7 +150,7 @@ const pluginQuestions = async (defaultExpressVersion) => {
     { name: 'cron', message: 'Do you need a cron folder?' },
     { name: 'data', message: 'Do you need a data folder?' },
     { name: 'uninstall', message: 'Do you need an uninstall script?' },
-    { name: 'sudoers', message: 'Do you need an sudoers file?' }
+    { name: 'sudoers', message: 'Do you need an sudoers file?' },
   ];
 
   if (plugin.language === 'node') {

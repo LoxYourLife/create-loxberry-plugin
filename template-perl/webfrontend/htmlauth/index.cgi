@@ -21,16 +21,17 @@ my $template = HTML::Template->new(
 # wir auch noch einen Hash zurück.
 my %L = LoxBerry::Web::readlanguage($template, "language.ini");
 
+# Die Plugin Daten werden direkt aus der Plugin-Datenbank gelesen.
+my $plugin = LoxBerry::System::plugindata();
+
 our %navbar;
-$navbar{10}{Name} = "{{plugin.name.title}}";
+$navbar{10}{Name} = $plugin->{PLUGINDB_TITLE};
 $navbar{10}{URL} = 'index.cgi';
 
-# Die Version des Plugins wird direkt aus der Plugin-Datenbank gelesen.
-my $version = LoxBerry::System::pluginversion();
 
 # Wir Übergeben die Titelzeile (mit Versionsnummer), einen Link ins Wiki und das Hilfe-Template.
 # Um die Sprache der Hilfe brauchen wir uns im Code nicht weiter zu kümmern.
-my $plugintitle = "{{plugin.name.title}} " . $version;
+my $plugintitle = "$plugin->{PLUGINDB_TITLE} $plugin->{PLUGINDB_VERSION}";
 my $helplink = "https://www.loxwiki.eu/x/S4ZYAg";
 my $helptemplate = "help.html"; 
 LoxBerry::Web::lbheader($plugintitle, $helplink, $helptemplate);

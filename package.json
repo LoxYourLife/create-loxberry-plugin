@@ -9,7 +9,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./",
-    "prettify": "prettier --write ."
+    "prettify": "prettier --write .",
+    "release:major": "node .github/release.js major false",
+    "release:minor": "node .github/release.js minor false",
+    "release:patch": "node .github/release.js patch false",
+    "pre:major": "node .github/release.js major true",
+    "pre:minor": "node .github/release.js minor true",
+    "pre:patch": "node .github/release.js patch true"
   },
   "config": {
     "eslint": "--ignore-path .gitignore --cache --format=codeframe --max-warnings=0 \"**/*.{js,md,html}\" \"*.{js,md,html}\" \".*.{js,md,html}\"",
@@ -19,9 +25,12 @@
   "license": "ISC",
   "dependencies": {
     "eslint": "7.26.0",
+    "generate-changelog": "1.8.0",
     "handlebars": "^4.7.6",
     "lodash": "4.17.21",
     "prettier": "2.3.0",
-    "prompts": "2.4.2"
+    "prompts": "2.4.2",
+    "read-ini-file": "3.0.1",
+    "write-ini-file": "3.0.2"
   }
 }

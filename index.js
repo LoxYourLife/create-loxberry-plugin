@@ -6,7 +6,7 @@ const util = require('util');
 const rmdir = util.promisify(fs.rmdir);
 const { copyRecursive, copyContentRecursive, renderFile, exec } = require('./helpers');
 
-const DEFAULT_EXPRESS_VERSION = '0.0.3';
+const DEFAULT_EXPRESS_VERSION = '1.0.2';
 
 const pathChecks = async () => {
   const nodeVersion = await exec('node', ['--version']);
@@ -35,8 +35,8 @@ const pathChecks = async () => {
 
   return installationFolder;
 };
-const getPluginInfo = async () => {
-  return questionaire.pluginQuestions(DEFAULT_EXPRESS_VERSION);
+const getPluginInfo = async (suggestedName) => {
+  return questionaire.pluginQuestions(DEFAULT_EXPRESS_VERSION, suggestedName);
 };
 
 const preUpgrade = (pluginConfig) => {
@@ -99,8 +99,11 @@ const postRoot = () => '';
 
 const install = async () => {
   const installationFolder = await pathChecks();
-  const pluginConfig = await getPluginInfo();
+  const suggestedName = path.basename(installationFolder);
 
+  const pluginConfig = await getPluginInfo(suggestedName);
+
+  console.log('');
   console.log('Installing content ...');
   fs.mkdirSync(installationFolder, { recursive: true });
 
@@ -116,10 +119,11 @@ const install = async () => {
   const rawfiles = ['preupgrade', 'postupgrade', 'preinstall', 'postinstall', 'preroot', 'postroot']
     .filter((name) => pluginConfig.features[name])
     .map((name) => `${name}.sh`);
-  const files = ['README.md', 'LICENCE', ...rawfiles];
+  const files = ['README.md', 'LICENCE', 'HOWTO.md', ...rawfiles];
   folders.forEach((folder) =>
     copyRecursive(path.resolve(__dirname, './meta', folder), path.resolve(installationFolder, folder))
   );
+  copyRecursive(path.resolve(__dirname, './meta/.github'), path.resolve(installationFolder, '.github'))
   files.forEach((file) =>
     fs.copyFileSync(path.resolve(__dirname, './meta', file), path.resolve(installationFolder, file))
   );
@@ -129,18 +133,17 @@ const install = async () => {
 
   // replace content in templates
   const contentReplace = {
-    php: ['webfrontend/htmlauth/index.php', 'README.md'],
-    perl: ['webfrontend/htmlauth/index.cgi', 'README.md'],
+    php: ['webfrontend/htmlauth/index.php', 'package.json', 'README.md', 'HOWTO.md'],
+    perl: ['package.json', 'README.md', 'HOWTO.md'],
     node: [
-      'webfrontend/htmlauth/express/express.js',
       'webfrontend/htmlauth/express/package.json',
-      'webfrontend/htmlauth/express/.htaccess',
-      'webfrontend/htmlauth/index.cgi',
       'package.json',
-      'README.md'
+      'README.md',
+      'HOWTO.md'
     ]
   };
 
+  pluginConfig.plugin[pluginConfig.plugin.language] = true;
   for (const file of contentReplace[pluginConfig.plugin.language]) {
     const fileName = path.resolve(installationFolder, file);
     await renderFile(fileName)(pluginConfig);
@@ -169,19 +172,21 @@ const install = async () => {
 
   // setup git
   await exec('git', ['init'], { cwd: installationFolder });
+  await exec('git', ['branch', '-m', 'master', 'main'], { cwd: installationFolder })
   await exec('git', ['remote', 'add', 'origin', pluginConfig.github.url], { cwd: installationFolder });
 
+  // install dependencies
+  console.log('Installing dependencies');
+  await exec('npm', ['install'], { cwd: installationFolder });
+  
   if (pluginConfig.plugin.language === 'node') {
-    // install dependencies
-    console.log('Installing dependencies');
-    await exec('npm', ['install'], { cwd: installationFolder });
-    await exec('npm', ['install'], { cwd: path.resolve(installationFolder, 'webfrontend', 'htmlauth') });
+    await exec('npm', ['install'], { cwd: path.resolve(installationFolder, 'webfrontend', 'htmlauth', 'express') });
   }
 
   console.log('');
   console.log('Installation finshed.');
   console.log(`Your plugin is available at ${installationFolder}`);
-  console.log('Please exchange the blank icons ;)');
+  console.log('Please exchange the blank icons ;) and have a look at HOWTO.md');
   console.log('');
   console.log('Happy Coding');
 };
