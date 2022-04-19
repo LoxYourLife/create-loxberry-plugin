@@ -44,36 +44,11 @@
 
 const prompts = require('prompts');
 
-const readIniFile = require('read-ini-file');
-const writeIniFile = require('write-ini-file');
-const path = require('path');
 const { execSync } = require('child_process');
 
 const question = async (message) => {
   const answer = await prompts({ type: 'confirm', name: 'answer', message });
   return answer.answer;
-};
-
-const updatePluginConfig = async (version) => {
-  const pluginCfg = path.resolve(__dirname, '..', 'plugin.cfg');
-  const plugin = await readIniFile(pluginCfg);
-  plugin.PLUGIN.VERSION = version;
-  await writeIniFile(pluginCfg, plugin);
-};
-
-const updateReleaseCfg = async (version, url) => {
-  const releaseCfg = path.resolve(__dirname, '..', 'release.cfg');
-  const release = await readIniFile(releaseCfg);
-  release.AUTOUPDATE.VERSION = version;
-  release.AUTOUPDATE.ARCHIVEURL = `${url}/archive/${version}.zip`;
-  await writeIniFile(releaseCfg, release);
-};
-const updatePreReleaseCfg = async (version, url) => {
-  const releaseCfg = path.resolve(__dirname, '..', 'prerelease.cfg');
-  const release = await readIniFile(releaseCfg);
-  release.AUTOUPDATE.VERSION = version;
-  release.AUTOUPDATE.ARCHIVEURL = `${url}/archive/${version}-rc.zip`;
-  await writeIniFile(releaseCfg, release);
 };
 
 const updateNpm = ({ version, prefix, isPrerelease }) => {
@@ -92,15 +67,8 @@ const gitReset = (files, staged) => execSync(`git restore ${staged ? '--staged '
 
 const commit = async (version, isPrerelease, config) => {
   execSync('git add CHANGELOG.md');
-  execSync('git add templates webfrontend');
   execSync('git add package.json package-lock.json');
-  execSync('git add plugin.cfg');
-  if (isPrerelease) {
-    execSync('git add prerelease.cfg');
-  } else {
-    execSync('git add release.cfg');
-  }
-
+  
   config.additionalNodeModules.forEach((module) => execSync(`git add ${module}/package.json ${module}/package-lock.json`));
   config.additionalCommands.forEach((command) => execSync(`git add ${command.gitFiles}`));
 
@@ -112,8 +80,6 @@ const commit = async (version, isPrerelease, config) => {
       'CHANGELOG.md',
       'package.json',
       'package-lock.json',
-      'plugin.cfg',
-      isPrerelease ? 'prerelease.cfg' : 'release.cfg',
       ...config.additionalCommands.map((command) => command.gitFiles),
       ...config.additionalNodeModules
     ];
@@ -237,15 +203,6 @@ const run = async () => {
   }
 
   config.additionalNodeModules.forEach((module) => updateNpm({ version, prefix: module, isPrerelease }));
-
-  console.log('updating plugin configs ...');
-
-  await updatePluginConfig(version);
-  if (isPrerelease) {
-    await updatePreReleaseCfg(version, githubUrl);
-  } else {
-    await updateReleaseCfg(version, githubUrl);
-  }
 
   console.log('generating changelog ...');
   generateChangelog(newVersion);
