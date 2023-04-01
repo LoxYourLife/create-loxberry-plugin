@@ -6,7 +6,7 @@ const util = require('util');
 const rmdir = util.promisify(fs.rmdir);
 const { copyRecursive, copyContentRecursive, renderFile, exec } = require('./helpers');
 
-const DEFAULT_EXPRESS_VERSION = '1.0.2';
+const DEFAULT_EXPRESS_VERSION = '2.0.2';
 
 const pathChecks = async () => {
   const nodeVersion = await exec('node', ['--version']);
