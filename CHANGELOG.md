@@ -1,4 +1,10 @@
-#### 1.0.4 (2022-04-19)
+#### 1.0.4 (2023-04-01)
+
+##### Other Changes
+
+* **feat:**  Update loxberry server version (565d3558)
+
+#### 1.0.3 (2022-04-19)
 
 ##### Other Changes
 

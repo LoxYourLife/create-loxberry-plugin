@@ -1,6 +1,6 @@
 {
   "name": "create-loxberry-plugin",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Loxberry Plugin Generator",
   "repository": "github:LoxYourLife/create-loxberry-plugin.git",
   "bin": {
